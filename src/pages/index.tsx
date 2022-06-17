@@ -38,9 +38,12 @@ const Home: NextPage = () => {
           </div>
 
           <div className="p-4 md:w-1/2 w-full">
-            <div className="h-full bg-gray-100 p-8 rounded-xl hover:shadow-lg duration-200 cursor-pointer">
+            <div
+              className="h-full bg-gray-100 p-8 rounded-xl hover:shadow-lg duration-200 cursor-pointer"
+              // onClick={}
+            >
               <div className="flex justify-between">
-                <div className="text-xl	text-black font-semibold mb-4">Connect wallet</div>
+                <div className="text-xl	text-black font-semibold mb-4">Use wallet address & private key</div>
                 <div className="text-red-600 font-semibold">bad</div>
               </div>
               <div className="flex justify-center">
