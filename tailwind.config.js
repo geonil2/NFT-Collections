@@ -8,7 +8,7 @@ module.exports = {
     extend: {},
     minHeight: {
       '100vh': '100vh',
-    }
+    },
   },
   plugins: [],
 }

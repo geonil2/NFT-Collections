@@ -6,7 +6,7 @@ import { Tag, Project } from '../type/project';
 import Card from '../components/card';
 
 const Project = ({ projectData } : { projectData: Project[] }) => {
-  console.log(projectData)
+
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto">
