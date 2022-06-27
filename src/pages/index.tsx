@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 
 import {useSetRecoilState} from "recoil";
-import { AddressAtom } from "../recoil/address";
+import { addressAtom } from "../recoil/address";
 
 import Wallet from '../assets/json/wallet.json';
 import Privacy from '../assets/json/privacy.json';
@@ -9,11 +9,11 @@ import Animation from '../components/animation';
 import {connectWallet} from '../utils/wallet';
 
 const Home: NextPage = () => {
-  const setAddressAtom = useSetRecoilState(AddressAtom);
+  const setaddressAtom = useSetRecoilState(addressAtom);
 
   const getAddress = async () => {
     const wallet = await connectWallet();
-    setAddressAtom(wallet);
+    setaddressAtom(wallet);
   }
 
   return (

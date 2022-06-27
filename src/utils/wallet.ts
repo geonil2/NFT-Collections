@@ -1,6 +1,7 @@
 export const connectWallet = async () => {
   const klaytn = getKlaytn();
-  return await klaytn.enable()
+  const login = await klaytn.enable();
+  return login[0];
 }
 
 export function getKlaytn() {
