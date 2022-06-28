@@ -1,5 +1,5 @@
 import React from 'react';
-import Animation from "./animation";
+import Ani from "./ani";
 import Logo from "../assets/json/logo.json";
 import Link from 'next/link';
 
@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
         <Link href="/">
           <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
-            <Animation animation={Logo} />
+            <Ani animation={Logo} />
             <span className="text-xl font-bold">NFT COLLECTIONS</span>
           </a>
         </Link>

@@ -5,7 +5,7 @@ import {addressAtom} from "../recoil/address";
 import Link from 'next/link';
 import {connectWallet} from "../utils/wallet";
 import {shortCutAddress} from "@geonil2/util-func";
-import Animation from "./animation";
+import Ani from "./ani";
 import Logo from "../assets/json/logo.json";
 
 const Header = () => {
@@ -42,7 +42,7 @@ const Header = () => {
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row justify-between items-center">
         <Link href="/">
           <a className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-            <Animation animation={Logo} />
+            <Ani animation={Logo} />
             <span className="text-xl font-bold">NFT COLLECTIONS</span>
           </a>
         </Link>
