@@ -1,6 +1,6 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { RecoilRoot } from 'recoil';
+import {RecoilRoot} from 'recoil';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import Head from "next/head";
@@ -9,9 +9,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Auto transaction</title>
-        <meta name="description" content="Auto transaction maker" />
-        <link rel="icon" href="/public/favicon.ico" />
+        <title>NFT Collections</title>
+        <meta name="description" content="NFT Collections" />
+        <link rel="shortcut icon" href="./public/favicon.ico" />
       </Head>
 
       <RecoilRoot>

@@ -1,7 +1,7 @@
 import ERC721 from '../abis/ERC721.json';
 import NFTFetcher from '../abis/NFTFetcher.json';
 import axios from "axios";
-import {NFTFETHCERADDRESS} from '../../config'
+import {NFTFETHCERADDRESS, BASEURL} from '../../config'
 
 export const getNFTData = async (NFTAddress: string, myAddress: string, network: string) => {
   const caver = window.caver;
@@ -50,7 +50,17 @@ const myNFTsInfo = async (address: string, myNFTsAddresses: string[], network: s
 
 export const findBeforeNFT = async (address: string, network: string) => {
   try {
-    const res = await axios.get(`http://127.0.0.1:8080/nft/metadata?address=${address}&network=${network}`);
+    const res = await axios.get(`${BASEURL}/nft/metadata?address=${address}&network=${network}`);
+    return res.data
+  } catch (e) {
+    console.error(e);
+    return []
+  }
+}
+
+export const deleteMyNFT = async (id: number) => {
+  try {
+    const res = await axios.delete(`${BASEURL}/nft/metadata?id=${id}`);
     console.log(res, 'res!!')
     return res.data
   } catch (e) {

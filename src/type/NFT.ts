@@ -1,10 +1,13 @@
 export interface NFT {
   id: number,
+  address: string,
+  url: string,
+  network: string,
   name: string,
   image: string,
   description: string,
   animation?: string,
-  attribute: Attribute,
+  attribute: Attribute[],
 }
 
 export type Attribute = {

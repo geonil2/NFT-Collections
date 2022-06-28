@@ -1,61 +1,114 @@
 import type { NextPage } from 'next'
+import React, {useEffect, useState} from 'react';
+import {useRecoilState, useRecoilValue} from "recoil";
+import {myNFTListAtom} from "../recoil/myNFTList";
+import {addressAtom} from "../recoil/address";
+import {PopupAtom} from "../recoil/popup";
 
-import {useSetRecoilState} from "recoil";
-import { addressAtom } from "../recoil/address";
+import {NETWORK} from "../../config";
 
-import Wallet from '../assets/json/wallet.json';
-import Privacy from '../assets/json/privacy.json';
-import Animation from '../components/animation';
-import {connectWallet} from '../utils/wallet';
+import {findBeforeNFT, getNFTData} from "../utils/collection";
+import NFTCard from "../components/NFTCard";
+import {shortCutAddress} from "@geonil2/util-func";
+import {NFT} from "../type/NFT";
+import Popup from "../components/popup";
 
 const Home: NextPage = () => {
-  const setaddressAtom = useSetRecoilState(addressAtom);
+  const address = useRecoilValue(addressAtom);
+  const [myNFTList, setMyNFTList] = useRecoilState(myNFTListAtom);
+  const [popup, setPopup] = useRecoilState(PopupAtom);
+  const [network, setNetwork] = useState('Klaytn');
+  const [NFTAddress, setNFTAddress] = useState('');
+  const [myAddress, setMyAddress] = useState('');
 
-  const getAddress = async () => {
-    const wallet = await connectWallet();
-    setaddressAtom(wallet);
+  const submitSearch = async () => {
+    const getMyNFTOfProject = await getNFTData(NFTAddress, myAddress, network);
+    const filteringNFTList = checkSameNFT(getMyNFTOfProject);
+    setMyNFTList(prev => [...prev, ...filteringNFTList]);
   }
 
+  const checkSameNFT = (getMyNFTOfProject: NFT[]) => {
+    const parsingList = JSON.stringify(myNFTList);
+    const removeSameList = getMyNFTOfProject.filter((list: NFT) => {
+      return !parsingList.includes(JSON.stringify(list))
+    });
+    return removeSameList;
+  }
+
+  const checkLoginStatus = async () => {
+    if (!address) {
+      alert('Please connect wallet');
+      return;
+    }
+    const beforeNFTList = await findBeforeNFT(address, network.toLowerCase());
+    setMyNFTList(beforeNFTList);
+  }
+
+  useEffect(() => {
+    if (address) {
+      checkLoginStatus();
+    }
+    setMyAddress(address);
+    setNFTAddress('');
+  }, [address])
+
   return (
-    <section className="text-gray-600 body-font">
-      <div className="container px-5 py-24 mx-auto">
-        <h1 className="text-3xl font-medium title-font text-gray-900 mb-12 text-center">Option</h1>
-        <div className="flex flex-wrap -m-4">
-          <div className="p-4 md:w-1/2 w-full">
-            <div
-              className="h-full bg-gray-100 p-8 rounded-xl hover:shadow-lg duration-200 cursor-pointer"
-              onClick={getAddress}
-            >
-              <div className="flex justify-between">
-                <div className="text-xl	text-black font-semibold mb-4">Connect wallet</div>
-                <div className="text-red-600 font-semibold">Good</div>
-              </div>
-              <div className="flex justify-center">
-                <Animation animation={Wallet} />
-              </div>
-                <p className="leading-relaxed text-center">It is recommended that you connect your wallet and use it.</p>
-            </div>
+    <>
+      <section className="text-gray-600 body-font overflow-hidden">
+        <div className="container flex text-4xl font-bold px-5 pt-10 pb-5 mx-auto">Search Project</div>
+        <div className="container flex px-5 py-2 mx-auto">
+          {/*<p className="text-2xl text-black">Select Network</p>*/}
+          <ul className="flex items-center">
+            {NETWORK.map((list) => (
+              <li
+                key={list.id}
+                className={`${list.className} bg-red-600 rounded-md py-0.5 px-5 mr-5 opacity-75 cursor-pointer hover:opacity-100 duration-300`}
+                onClick={() => setNetwork(list.name)}
+              >{list.name}</li>
+            ))}
+          </ul>
+        </div>
+
+        {/*<div className="container text-lg px-5 py-1 mx-auto">Network : {network}</div>*/}
+
+        <div className="flex flex-col lg:flex-row lg:items-center container px-5 py-1 mx-auto">
+          <div className="flex mr-5 my-2">
+            <p>NFT Address : </p>
+            <input
+              type="text"
+              value={shortCutAddress(NFTAddress, 10)}
+              className="xl:w-80 w-40 border border-[#6366F1] border-solid focus:outline-[#6366F1] rounded-sm text-black mx-2 px-1"
+              onChange={(e) => setNFTAddress(e.target.value)}
+            />
           </div>
 
-          <div className="p-4 md:w-1/2 w-full">
-            <div
-              className="h-full bg-gray-100 p-8 rounded-xl hover:shadow-lg duration-200 cursor-pointer"
-              // onClick={}
-            >
-              <div className="flex justify-between">
-                <div className="text-xl	text-black font-semibold mb-4">Use wallet address & private key</div>
-                <div className="text-red-600 font-semibold">bad</div>
-              </div>
-              <div className="flex justify-center">
-                <Animation animation={Privacy} />
-              </div>
-              <p className="leading-relaxed text-center">You cannot link your wallet, but you can use it if you know your wallet address and private key.</p>
-            </div>
+          <div className="flex my-2">
+            <p>My Wallet Address : </p>
+            <input
+              type="text"
+              value={shortCutAddress(myAddress, 10)}
+              className="xl:w-80 w-40 border border-[#6366F1] border-solid focus:outline-[#6366F1] rounded-sm text-black mx-2 px-1"
+              onChange={(e) => setMyAddress(e.target.value)}
+            />
           </div>
+          <button
+            className="h-8 bg-[#6366F1] text-white rounded-md opacity-75 py-0.5 px-5 hover:opacity-100 duration-300"
+            onClick={submitSearch}
+          >Search</button>
+          <button
+            className="h-8 bg-[#6366F1] text-white rounded-md opacity-75 py-0.5 px-5 lg:mx-2 mt-2 lg:mt-0 hover:opacity-100 duration-300"
+            onClick={checkLoginStatus}
+          >Only Show My NFT</button>
         </div>
-      </div>
-    </section>
-  )
-}
+      </section>
+
+      {myNFTList.length ? myNFTList.map((list: NFT, index) => (
+        <NFTCard nft={list} key={index} />
+      )) : null}
+
+      {popup ? <Popup /> : null}
+    </>
+  );
+};
 
 export default Home

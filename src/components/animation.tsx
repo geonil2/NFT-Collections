@@ -7,7 +7,7 @@ const Animation = ({animation}: {animation: JSON}) => {
       loop
       animationData={animation}
       play
-      style={{ width: 150, height: 150 }}
+      style={{ width: 50, height: 50 }}
     />
   );
 };
