@@ -4,6 +4,10 @@ import axios from "axios";
 import {NFTFETHCERADDRESS, BASEURL} from '../../config'
 
 export const getNFTData = async (NFTAddress: string, myAddress: string, network: string) => {
+  if (typeof  window === "undefined") {
+    return;
+  }
+  //@ts-ignore
   const caver = window.caver;
 
   if (typeof caver === 'undefined') {

@@ -17,10 +17,10 @@ export const PopupDataAtom = atom<NFT>({
     image: '',
     description: '',
     animation: '',
-    attribute: {
+    attributes: [{
       trait_type: '',
       value: ''
-    }
+    }]
   }
 })
 

@@ -24,7 +24,7 @@ const Home: NextPage = () => {
   const submitSearch = async () => {
     const getMyNFTOfProject = await getNFTData(NFTAddress, myAddress, network);
     const filteringNFTList = checkSameNFT(getMyNFTOfProject);
-    setMyNFTList(prev => [...prev, ...filteringNFTList]);
+    setMyNFTList((prev: NFT[]) => [...prev, ...filteringNFTList]);
   }
 
   const checkSameNFT = (getMyNFTOfProject: NFT[]) => {
@@ -102,8 +102,8 @@ const Home: NextPage = () => {
         </div>
       </section>
 
-      {myNFTList.length ? myNFTList.map((list: NFT, index) => (
-        <NFTCard nft={list} key={index} />
+      {myNFTList.length ? myNFTList.map((list: NFT) => (
+        <NFTCard nft={list} key={list.id} />
       )) : null}
 
       {popup ? <Popup /> : null}

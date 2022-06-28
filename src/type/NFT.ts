@@ -7,7 +7,7 @@ export interface NFT {
   image: string,
   description: string,
   animation?: string,
-  attribute: Attribute[],
+  attributes: Attribute[],
 }
 
 export type Attribute = {
