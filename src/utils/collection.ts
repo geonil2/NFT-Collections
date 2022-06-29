@@ -54,6 +54,7 @@ const myNFTsInfo = async (address: string, myNFTsAddresses: string[], network: s
 
 export const findBeforeNFT = async (address: string, network: string) => {
   try {
+    console.log(process.env, 'base')
     const res = await axios.get(`${BASEURL}/nft/metadata?address=${address}&network=${network}`);
     return res.data
   } catch (e) {

@@ -1,5 +1,3 @@
-const { APIURL } = process.env;
-
 export const NFTFETHCERADDRESS = '0x8b615f543210d34c61708a55D41a8613B5959e5d';
 export const NETWORK = [
   {
@@ -8,4 +6,5 @@ export const NETWORK = [
     className: 'bg-red-600 text-white'
   }
 ]
-export const BASEURL = APIURL;
+
+export const BASEURL = process.env.NEXT_PUBLIC_API_URL;
