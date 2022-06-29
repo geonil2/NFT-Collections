@@ -39,7 +39,7 @@ const getNFTsAddressOfIds = async (projectContract: any, myNFTs: string[]) => {
 const myNFTsInfo = async (address: string, myNFTsAddresses: string[], network: string) => {
   try {
     const urls = myNFTsAddresses.join(' ')
-    const res = await axios.post(`http://127.0.0.1:8080/nft/metadata`,
+    const res = await axios.post(`${BASEURL}/nft/metadata`,
       {
         address,
         url: urls,
