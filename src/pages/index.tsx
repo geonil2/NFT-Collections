@@ -63,7 +63,7 @@ const Home: NextPage = () => {
     const newDate = new Date();
 
     newDate.setHours(newDate.getHours() + limitInHour);
-    setCookie('access-token', {address, token}, { expires: newDate })
+    setCookie('access-token', {address, token}, { expires: newDate, httpOnly: true })
   }
 
   useEffect(() => {

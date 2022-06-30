@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>NFT Collections</title>
         <meta name="description" content="NFT Collections" />
-        <link rel="shortcut icon" href="./public/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="/public/favicon.png" />
       </Head>
 
       <RecoilRoot>
