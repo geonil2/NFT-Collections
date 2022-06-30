@@ -7,11 +7,12 @@ import {PopupAtom} from "../recoil/popup";
 
 import {NETWORK} from "../../config";
 
-import {findBeforeNFT, getNFTData} from "../utils/collection";
+import {findBeforeNFT, getNewToken, getNFTData} from "../utils/collection";
 import NFTCard from "../components/NFTCard";
 import {shortCutAddress} from "@geonil2/util-func";
 import {NFT} from "../type/NFT";
 import Popup from "../components/popup";
+import {useCookies} from "react-cookie";
 
 const Home: NextPage = () => {
   const address = useRecoilValue(addressAtom);
@@ -20,14 +21,15 @@ const Home: NextPage = () => {
   const [network, setNetwork] = useState('Klaytn');
   const [NFTAddress, setNFTAddress] = useState('');
   const [myAddress, setMyAddress] = useState('');
+  const [cookies, setCookie] = useCookies(['access-token']);
 
-  const submitSearch = async () => {
+  const submitSearch = async (): Promise<void> => {
     const getMyNFTOfProject = await getNFTData(NFTAddress, myAddress, network);
     const filteringNFTList = checkSameNFT(getMyNFTOfProject);
     setMyNFTList((prev: NFT[]) => [...prev, ...filteringNFTList]);
   }
 
-  const checkSameNFT = (getMyNFTOfProject: NFT[]) => {
+  const checkSameNFT = (getMyNFTOfProject: NFT[]): NFT[] => {
     const parsingList = JSON.stringify(myNFTList);
     const removeSameList = getMyNFTOfProject.filter((list: NFT) => {
       return !parsingList.includes(JSON.stringify(list))
@@ -35,19 +37,36 @@ const Home: NextPage = () => {
     return removeSameList;
   }
 
-  const checkLoginStatus = async () => {
+  const checkLoginStatus = async (): Promise<void> => {
     if (!address) {
       alert('Please connect wallet');
       return;
     }
-    const beforeNFTList = await findBeforeNFT(address, network.toLowerCase());
+    const token = await getAccessToken();
+    const beforeNFTList = await findBeforeNFT(address, network.toLowerCase(), token);
     setMyNFTList(beforeNFTList);
   }
 
-  useEffect(() => {
-    if (address) {
-      checkLoginStatus();
+  const getAccessToken = async (): Promise<string> => {
+    const accessTokenData = cookies['access-token'];
+
+    if (!accessTokenData || accessTokenData.address !== address) {
+      const newToken = await getNewToken(address);
+      setTokenInCookie(newToken.address, newToken.token);
+      return newToken.accessToken;
     }
+    return accessTokenData.token;
+  }
+
+  const setTokenInCookie = (address: string, token: string): void => {
+    const limitInHour = 24;
+    const newDate = new Date();
+
+    newDate.setHours(newDate.getHours() + limitInHour);
+    setCookie('access-token', {address, token}, { expires: newDate })
+  }
+
+  useEffect(() => {
     setMyAddress(address);
     setNFTAddress('');
   }, [address])
@@ -106,7 +125,7 @@ const Home: NextPage = () => {
         <NFTCard nft={list} key={list.id} />
       )) : null}
 
-      {popup ? <Popup /> : null}
+      {popup ? <Popup setTokenInCookie={setTokenInCookie}/> : null}
     </>
   );
 };

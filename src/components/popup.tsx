@@ -4,13 +4,15 @@ import {PopupAtom, PopupDataAtom} from "../recoil/popup";
 import {NFT} from "../type/NFT";
 import {myNFTListAtom} from "../recoil/myNFTList";
 import {addressAtom} from "../recoil/address";
-import {deleteMyNFT} from "../utils/collection";
+import {deleteMyNFT, getNewToken} from "../utils/collection";
+import {useCookies} from "react-cookie";
 
-const Popup = () => {
+const Popup = ({setTokenInCookie} : {setTokenInCookie(address: string, token: string): void}) => {
   const address = useRecoilValue(addressAtom);
   const setPopup = useSetRecoilState(PopupAtom);
   const popupData = useRecoilValue(PopupDataAtom);
   const [myNFTList, setMyNFTList] = useRecoilState(myNFTListAtom);
+  const [cookies, setCookie, removeCookie] = useCookies(['access-token']);
 
   const deleteThisNFT = async () => {
     await checkMyNFT();
@@ -20,9 +22,23 @@ const Popup = () => {
   }
 
   const checkMyNFT = async () => {
-    if (address.toLowerCase() == popupData.address.toLowerCase()) {
-      await deleteMyNFT(popupData.id);
+    if (address.toLowerCase() !== popupData.address.toLowerCase()) {
+      return;
     }
+    const token = await checkHaveToken();
+    console.log(token, '????')
+    await deleteMyNFT(popupData.id, token);
+  }
+
+  const checkHaveToken = async () => {
+    const accessTokenData = cookies['access-token'];
+
+    if (!accessTokenData || accessTokenData.address !== address) {
+      const newToken = await getNewToken(address);
+      setTokenInCookie(newToken.address, newToken.token);
+      return newToken.token;
+    }
+    return accessTokenData.token;
   }
 
   return (

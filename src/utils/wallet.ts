@@ -37,4 +37,9 @@ export function getKlaytn() {
   return window.klaytn;
 }
 
+export const registerWallet = async (message: string, walletAccount: string) => {
+  //@ts-ignore
+  const signature = await window.caver.klay.sign(message, walletAccount)
+  return signature;
+}
 

@@ -12,7 +12,7 @@ const NftCard = ({ nft } : { nft : NFT }) => {
       <div className="container px-5 py-24 mx-auto">
         <div className="mx-auto flex flex-wrap">
           {nft.animation ?
-            <video autoPlay loop src={nft.animation} className="lg:w-1/2 w-full lg:h-auto object-cover object-center rounded" ></video> :
+            <video autoPlay loop src={nft.animation} className="lg:w-4/12 w-full lg:h-auto object-cover object-center rounded" ></video> :
             <img alt="NFT image" className="lg:w-4/12 w-full lg:h-auto object-cover object-center rounded" src={nft.image} />
           }
           <div className="lg:w-8/12 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
