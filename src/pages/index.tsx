@@ -21,7 +21,7 @@ const Home: NextPage = () => {
   const [network, setNetwork] = useState('Klaytn');
   const [NFTAddress, setNFTAddress] = useState('');
   const [myAddress, setMyAddress] = useState('');
-  const [cookies, setCookie] = useCookies(['access-token']);
+  const [cookies, setCookie, removeCookie] = useCookies(['access-token']);
 
   const submitSearch = async (): Promise<void> => {
     const getMyNFTOfProject = await getNFTData(NFTAddress, myAddress, network);
@@ -36,6 +36,10 @@ const Home: NextPage = () => {
     });
     return removeSameList;
   }
+
+  // useEffect(() => {
+  //   removeCookie('access-token')
+  // })
 
   const checkLoginStatus = async (): Promise<void> => {
     if (!address) {
@@ -63,7 +67,7 @@ const Home: NextPage = () => {
     const newDate = new Date();
 
     newDate.setHours(newDate.getHours() + limitInHour);
-    setCookie('access-token', {address, token}, { expires: newDate, httpOnly: true })
+    setCookie('access-token', {address, token}, { expires: newDate })
   }
 
   useEffect(() => {
