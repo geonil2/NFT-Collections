@@ -3,7 +3,6 @@ import NFTFetcher from '../abis/NFTFetcher.json';
 import axios from "axios";
 import {NFTFETHCERADDRESS, BASEURL} from '../../config'
 import {registerWallet} from "./wallet";
-import {sign} from "crypto";
 
 export const getNFTData = async (NFTAddress: string, myAddress: string, network: string): Promise<any> => {
   if (typeof window === "undefined") {
@@ -56,7 +55,6 @@ const myNFTsInfo = async (address: string, myNFTsAddresses: string[], network: s
 
 export const findBeforeNFT = async (address: string, network: string, token: string): Promise<[]> => {
   try {
-    console.log(process.env, 'base')
     const res = await axios.get(`${BASEURL}/nft/metadata?address=${address}&network=${network}`, {
       headers: {Authorization: `Bearer ${token}`}
     });
@@ -70,7 +68,6 @@ export const findBeforeNFT = async (address: string, network: string, token: str
 export const deleteMyNFT = async (id: number, token: string): Promise<[]> => {
   try {
     const res = await axios.delete(`${BASEURL}/nft/metadata?id=${id}`, {headers: { Authorization: `Bearer ${token}` }});
-    console.log(res, 'res!!')
     return res.data
   } catch (e) {
     console.error(e);

@@ -26,7 +26,6 @@ const Popup = ({setTokenInCookie} : {setTokenInCookie(address: string, token: st
       return;
     }
     const token = await checkHaveToken();
-    console.log(token, '????')
     await deleteMyNFT(popupData.id, token);
   }
 
