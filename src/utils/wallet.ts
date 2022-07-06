@@ -1,5 +1,5 @@
 interface Klaytn {
-  on: (eventName: string, callback: () => void) => void;
+  on: (eventName: string, callback: (params: any) => void) => void;
   enable: () => Promise<Array<string>>;
   selectedAddress: string;
   networkVersion: number;
@@ -30,7 +30,7 @@ export const connectWallet = async () => {
   return login[0];
 }
 
-export function getKlaytn() {
+export const getKlaytn = () => {
   if (typeof window.klaytn === 'undefined') {
     throw new Error('Kaikas does not installed');
   }
@@ -42,4 +42,9 @@ export const registerWallet = async (message: string, walletAccount: string) => 
   const signature = await window.caver.klay.sign(message, walletAccount)
   return signature;
 }
+
+export const checkNetworkServer = () => {
+  return getKlaytn().networkVersion !== 8217 ? true : false
+}
+
 

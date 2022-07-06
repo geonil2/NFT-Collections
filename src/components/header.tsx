@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useRecoilState} from "recoil";
 import {addressAtom} from "../recoil/address";
+import {networkAtom} from "../recoil/network";
 
 import Link from 'next/link';
-import {connectWallet} from "../utils/wallet";
+import {checkNetworkServer, connectWallet, getKlaytn} from "../utils/wallet";
 import {shortCutAddress} from "@geonil2/util-func";
 import Ani from "./ani";
 import Logo from "../assets/json/logo.json";
@@ -11,6 +12,7 @@ import Logo from "../assets/json/logo.json";
 const Header = () => {
   const [onTicker, setOnTicker] = useState(false);
   const [address, setAddress] = useRecoilState(addressAtom);
+  const [network, setNetwork] = useRecoilState(networkAtom);
 
   const getAddress = async () => {
     const wallet = await connectWallet();
@@ -29,6 +31,20 @@ const Header = () => {
     document.body.removeChild(tempElem);
   }
 
+  const checkAutoLogin = () => {
+    const myAddress = getKlaytn().selectedAddress;
+    if (myAddress) {
+      setAddress(myAddress)
+    }
+  }
+
+  const changeWalletAddress = () => {
+    getKlaytn().on('accountsChanged', (accounts: string[]) => {
+      const newAddress = accounts[0];
+      setAddress(newAddress)
+    });
+  }
+
   useEffect(() => {
     if (onTicker) {
       setTimeout(() => {
@@ -36,6 +52,12 @@ const Header = () => {
       }, 2000)
     }
   }, [onTicker])
+
+  useEffect(()=> {
+    checkAutoLogin();
+    setNetwork(checkNetworkServer());
+    changeWalletAddress();
+  }, [])
   
   return (
     <header className="text-gray-600 body-font">
@@ -69,6 +91,7 @@ const Header = () => {
           </button>
         }
       </div>
+      {network ? <div className="bg-red-600 text-white text-center py-1">Check your Kaikas network.</div> : null}
     </header>
   );
 };

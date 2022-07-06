@@ -1,0 +1,24 @@
+name: main-deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  SSH:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run scripts
+        uses: applyboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd NFT-Collections
+            git pull
+            npm run build
+            pm2 reload 0
