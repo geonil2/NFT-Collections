@@ -61,12 +61,12 @@ jobs:
         aws-region: ap-northeast-2
 
     - name: Copy files to production bucket
-      run: aws s3 cp --region ap-northeast-2 ./nft-collections-front.zip s3://nft-collections.immmapp.com
+      run: aws s3 cp --region ap-northeast-2 ./nft-collections-front.zip s3://nft-collections.immmapp.com/public/
 
     - name: deploy with AWS codeDeploy
       run: aws deploy create-deployment
         --application-name NFT-Collections-Front
         --deployment-config-name CodeDeployDefault.OneAtATime
         --deployment-group-name GROUP
-        --s3-location bucket=nft-collections.immmapp.com,bundleType=zip,key=nft-collections-front.zip
+        --s3-location bucket=nft-collections.immmapp.com,bundleType=zip,key=public/nft-collections-front.zip
 
