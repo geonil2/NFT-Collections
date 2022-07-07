@@ -61,7 +61,9 @@ jobs:
         aws-region: ap-northeast-2
 
     - name: Copy files to production bucket
-      run: aws s3 cp --region ap-northeast-2 ./nft-collections-front.zip s3://nft-collections.immmapp.com
+      run: aws s3 sync build s3://nft-collections.immmapp.com --cache-control 'max-age=10, must-revalidate, public'
+#    - name: Copy files to production bucket
+#      run: aws s3 cp --region ap-northeast-2 ./nft-collections-front.zip s3://nft-collections.immmapp.com
 
     - name: deploy with AWS codeDeploy
       run: aws deploy create-deployment
