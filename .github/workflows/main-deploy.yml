@@ -48,7 +48,7 @@ jobs:
       working-directory: ./
       run: |
         npm install
-        npm build
+        npm run build
 
     - name: zip distributions
       run: zip -r nft-collections-front.zip ./.next
