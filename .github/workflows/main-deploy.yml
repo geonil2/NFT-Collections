@@ -50,8 +50,8 @@ jobs:
         npm install
         npm run build
 
-    - name: zip distributions
-      run: zip -r nft-collections-front.zip ./.next
+#    - name: zip distributions
+#      run: zip -r nft-collections-front.zip ./.next
 
     - name: AWS configure credentials
       uses: aws-actions/configure-aws-credentials@v1
