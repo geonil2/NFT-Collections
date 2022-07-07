@@ -68,4 +68,4 @@ jobs:
         --application-name NFT-Collections-Front
         --deployment-config-name CodeDeployDefault.OneAtATime
         --deployment-group-name GROUP
-        --s3-location bucket=nft-collections.immmapp.com,bundleType=zip,key=public/nft-collections-front.zip
+        --s3-location bucket=nft-collections.immmapp.com,bundleType=zip,key=nft-collections-front.zip
