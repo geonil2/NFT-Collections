@@ -1,4 +1,4 @@
-name: main-deploy
+name: Main deploy
 
 on:
   push:
@@ -14,58 +14,58 @@ jobs:
         node-version: [16.x]
 
       steps:
-        - name: Checkout source code.
-          uses: actions/checkout@v2
+      - name: Checkout source code.
+        uses: actions/checkout@v2
 
-        - name: Use Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v2
-          with:
-            node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
 
-        - name: Compute dependency cache key
-          id: compute_lockfile_hash
-          run: echo "::set-output name=hash::${{ hashFiles('package-lock.json') }}"
+      - name: Compute dependency cache key
+        id: compute_lockfile_hash
+        run: echo "::set-output name=hash::${{ hashFiles('package-lock.json') }}"
 
-        - name: Check dependency cache
-          uses: actions/cache@v2
-          id: cache_dependencies
-          with:
-            path: ${{ github.workspace }}/node_modules
-            key: ${{ steps.compute_lockfile_hash.outputs.hash }}
+      - name: Check dependency cache
+        uses: actions/cache@v2
+        id: cache_dependencies
+        with:
+          path: ${{ github.workspace }}/node_modules
+          key: ${{ steps.compute_lockfile_hash.outputs.hash }}
 
-        - name: Install dependencies
-          if: steps.cache_dependencies.outputs.cache-hit == ''
-          run: npm ci
+      - name: Install dependencies
+        if: steps.cache_dependencies.outputs.cache-hit == ''
+        run: npm ci
 
-        - name: create env file
-          working-directory: ./
-          run: |
-            touch .env
-            cat << EOF >> .env
-            ${{ secrets.ENV }}
+      - name: create env file
+        working-directory: ./
+        run: |
+          touch .env
+          cat << EOF >> .env
+          ${{ secrets.ENV }}
 
-        - name: build files
-          working-directory: ./
-          run: |
-            npm install
-            npm build
+      - name: build files
+        working-directory: ./
+        run: |
+          npm install
+          npm build
 
-        - name: zip distributions
-          run: zip -r nft-collections-front.zip ./.next
+      - name: zip distributions
+        run: zip -r nft-collections-front.zip ./.next
 
-        - name: AWS configure credentials
-          uses: aws-actions/configure-aws-credentials@v1
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRETKEY }}
-            aws-region: ap-northeast-2
+      - name: AWS configure credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRETKEY }}
+          aws-region: ap-northeast-2
 
-        - name: Copy files to production bucket
-          run: aws s3 cp --region ap-northeast-2 ./nft-collections-front.zip s3://nft-collections.immmapp.com
+      - name: Copy files to production bucket
+        run: aws s3 cp --region ap-northeast-2 ./nft-collections-front.zip s3://nft-collections.immmapp.com
 
-        - name: deploy with AWS codeDeploy
-          run: aws deploy create-deployment
-            --application-name NFT-Collections-Front
-            --deployment-config-name CodeDeployDefault.OneAtATime
-            --deployment-group-name GROUP
-            --s3-location bucket=nft-collections.immmapp.com,bundleType=zip,key=public/nft-collections-front.zip
+      - name: deploy with AWS codeDeploy
+        run: aws deploy create-deployment
+          --application-name NFT-Collections-Front
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name GROUP
+          --s3-location bucket=nft-collections.immmapp.com,bundleType=zip,key=public/nft-collections-front.zip
