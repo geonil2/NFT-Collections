@@ -37,7 +37,7 @@ jobs:
       if: steps.cache_dependencies.outputs.cache-hit == ''
       run: npm ci
 
-    - name: create env
+    - name: create env file
       working-directory: ./
       run: |
         touch .env
